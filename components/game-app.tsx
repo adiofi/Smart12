@@ -647,7 +647,9 @@ function QuestionBoard({
       <div className="question-footer">
         <div className="turn-instruction">
           Turno de <strong style={{ color: currentPlayer.color.value }}>{currentPlayer.name}</strong>
-          {!currentPlayer.hasAnsweredThisRound && <span> · Debe destapar al menos una opción</span>}
+          {currentPlayer.hasAnsweredThisRound
+            ? <span> · Puede elegir otro tapón, pasar o plantarse</span>
+            : <span> · Debe destapar al menos una opción</span>}
         </div>
         <div className="round-controls">
           <button className="pass-button" disabled={!canStop} onClick={() => dispatch({ type: "PASS" })}>

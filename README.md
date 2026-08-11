@@ -13,12 +13,13 @@ El proyecto es autónomo: las preguntas viajan dentro de la aplicación y la par
 - Rueda de pregunta con 12 opciones.
 - Seis tipos de pregunta: sí/no, número, orden, siglo/década, color y respuesta libre.
 - Puntuación total y puntuación provisional de ronda.
+- Tras un acierto, el mismo asiento conserva el turno para destapar otro tapón, pasar o plantarse.
 - Pase temporal, plantarse, fallo y eliminación de ronda.
 - Recuperación de la última partida mediante `localStorage`.
 - Puntuación objetivo configurable antes de jugar.
 - 550 preguntas: 100 de geografía, historia, deportes y ciencia; 150 de entretenimiento, incluidas 50 de música. En total hay 6.600 opciones.
 - Selección aleatoria sin repetir los identificadores ya utilizados.
-- 23 pruebas automatizadas del motor, persistencia, API, contenido y comportamiento responsive.
+- 24 pruebas automatizadas del motor, persistencia, API, contenido y comportamiento responsive.
 
 ## Estructura importante
 

@@ -59,11 +59,11 @@ describe("gameReducer", () => {
     expect(gameReducer(state, { type: "BANK" })).toBe(state);
   });
 
-  it("suma un acierto provisional y avanza al siguiente asiento", () => {
+  it("suma un acierto provisional y conserva el turno", () => {
     const state = answer(playingState(), 1, true);
     expect(state.players[1].roundScore).toBe(1);
     expect(state.players[1].totalScore).toBe(0);
-    expect(state.currentPlayerIndex).toBe(2);
+    expect(state.currentPlayerIndex).toBe(1);
     expect(state.revealedPositions).toEqual([1]);
   });
 
@@ -80,8 +80,6 @@ describe("gameReducer", () => {
 
   it("pasar salta solo el turno y mantiene al asiento activo", () => {
     let state = answer(playingState(), 1, true);
-    state = answer(state, 2, true);
-    state = answer(state, 3, true);
     expect(state.currentPlayerIndex).toBe(1);
     state = gameReducer(state, { type: "PASS" });
     expect(state.players[1].status).toBe("active");
@@ -91,12 +89,30 @@ describe("gameReducer", () => {
 
   it("plantarse guarda puntos y retira al asiento de la ronda", () => {
     let state = answer(playingState(), 1, true);
-    state = answer(state, 2, true);
-    state = answer(state, 3, true);
     state = gameReducer(state, { type: "BANK" });
     expect(state.players[1].status).toBe("banked");
     expect(state.players[1].roundScore).toBe(0);
     expect(state.players[1].totalScore).toBe(1);
+    expect(state.currentPlayerIndex).toBe(2);
+  });
+
+  it("mantiene la misma pregunta hasta que todos se plantan o quedan eliminados", () => {
+    let state = playingState();
+    const questionId = state.currentQuestion?.id;
+
+    state = answer(state, 1, true); // Jugador 2 conserva el turno
+    state = gameReducer(state, { type: "PASS" }); // Turno de Jugador 3
+    state = answer(state, 2, true);
+    state = gameReducer(state, { type: "BANK" }); // Jugador 3 se planta; turno de Jugador 1
+    state = answer(state, 3, false); // Jugador 1 eliminado; vuelve Jugador 2
+
+    expect(state.phase).toBe("question");
+    expect(state.currentQuestion?.id).toBe(questionId);
+    expect(state.currentPlayerIndex).toBe(1);
+    expect(state.players.map((player) => player.status)).toEqual(["eliminated", "active", "banked"]);
+
+    state = gameReducer(state, { type: "BANK" });
+    expect(state.phase).toBe("round_summary");
   });
 
   it("permite al último asiento activo seguir jugando consigo mismo", () => {

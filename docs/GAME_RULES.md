@@ -19,12 +19,12 @@
 
 Un asiento activo debe destapar al menos una opción antes de poder pasar o plantarse.
 
-- **Acierto:** suma un punto provisional y el turno avanza.
-- **Fallo:** pierde todos sus puntos provisionales y queda fuera de la ronda.
-- **Pasar:** omite ese turno, pero sigue activo y conserva sus puntos provisionales.
-- **Plantarse:** suma sus puntos provisionales al total y deja de participar en esa ronda.
+- **Acierto:** suma un punto provisional y conserva el turno. Puede destapar otro tapón, pasar o plantarse.
+- **Fallo:** pierde todos sus puntos provisionales, queda fuera de la ronda y el turno pasa al siguiente asiento activo.
+- **Pasar:** entrega el turno al siguiente asiento activo, pero sigue participando y conserva sus puntos provisionales.
+- **Plantarse:** suma sus puntos provisionales al total, deja de participar en esa ronda y el turno avanza.
 
-Si solo queda un asiento activo, continúa encadenando turnos hasta fallar, plantarse o agotar las opciones.
+La misma pregunta permanece en juego mientras quede algún asiento activo. Si solo queda uno, continúa hasta fallar, plantarse o agotar las opciones.
 
 ## Fin de ronda
 

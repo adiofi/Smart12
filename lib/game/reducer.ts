@@ -180,6 +180,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         pendingRevealPosition: null,
       };
       if (revealedPositions.length === 12) return finishRound(intermediate, true);
+      if (action.correct) return touch(intermediate);
       return advanceOrFinish(intermediate, players);
     }
     case "PASS": {
