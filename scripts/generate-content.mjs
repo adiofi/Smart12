@@ -4,12 +4,14 @@ import { buildGeographyQuestions } from "./content/geography.mjs";
 import { buildHistoryQuestions } from "./content/history.mjs";
 import { buildSportsQuestions } from "./content/sports.mjs";
 import { buildEntertainmentQuestions } from "./content/entertainment.mjs";
+import { buildScienceQuestions } from "./content/science.mjs";
 
 const questions = [
   ...buildGeographyQuestions(),
   ...buildHistoryQuestions(),
   ...buildSportsQuestions(),
   ...buildEntertainmentQuestions(),
+  ...buildScienceQuestions(),
 ];
 
 const dataPath = resolve("data/questions.json");

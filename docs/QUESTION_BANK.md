@@ -1,6 +1,6 @@
 # Banco inicial de preguntas
 
-El banco está incluido en `data/questions.json` y contiene **400 preguntas**, 100 por categoría, con 12 opciones cada una. En total son 4.800 retos individuales.
+El banco está incluido en `data/questions.json` y contiene **550 preguntas**, con 12 opciones cada una. Geografía, historia, deportes y ciencia tienen 100 tarjetas; entretenimiento tiene 150, de las que 50 son de música. En total son 6.600 retos individuales.
 
 ## Funcionamiento
 
@@ -17,9 +17,10 @@ El contenido es estático. Para publicar una corrección o nuevas preguntas hay 
 | Campo | Uso |
 |---|---|
 | `id` | Identificador UUID estable utilizado para evitar repeticiones. |
+| `family` | Familia editorial determinista utilizada para validar la composición del banco. |
 | `title` | Enunciado o reto principal. |
 | `type` | Uno de los seis formatos admitidos. |
-| `category_slug` | `geografia`, `historia`, `deportes` o `entretenimiento`. |
+| `category_slug` | `geografia`, `historia`, `deportes`, `entretenimiento` o `ciencia`. |
 | `options` | Lista de 12 tapones, cada uno con texto y respuesta. |
 | `difficulty` | Dificultad editorial del 1 al 5. |
 | `active` | Permite excluir una pregunta sin borrarla. |
@@ -35,19 +36,22 @@ Los seis valores admitidos en `type` son `boolean`, `number`, `order`, `period`,
 - Preferencia por hechos estables frente a datos que cambian cada temporada.
 - Mezcla estructural de respuestas positivas y negativas en las tarjetas binarias.
 - Los órdenes utilizan doce rangos distintos, sin empates arbitrarios.
+- No se admiten años exactos como respuesta; las preguntas cronológicas usan siglos, décadas u orden relativo.
+- Las tarjetas de siglo o década no superan el 17 % de ninguna categoría.
+- Entretenimiento incluye exactamente 50 tarjetas de música.
 - Todas las tarjetas y opciones tienen identificadores o posiciones deterministas.
 
 ## Distribución por tipo
 
 | Tipo | Preguntas |
 |---|---:|
-| Respuesta libre | 150 |
-| Sí o no | 96 |
-| Número | 64 |
-| Orden | 36 |
-| Siglo o década | 36 |
-| Color | 18 |
-| **Total** | **400** |
+| Respuesta libre | 256 |
+| Sí o no | 130 |
+| Número | 38 |
+| Orden | 52 |
+| Siglo o década | 50 |
+| Color | 24 |
+| **Total** | **550** |
 
 ## Archivos editoriales
 
@@ -65,10 +69,14 @@ npm run content:validate
 
 La validación comprueba:
 
-- 400 preguntas exactas y 100 por categoría.
+- 550 preguntas exactas: 100 por categoría salvo entretenimiento, con 150.
+- 50 preguntas musicales dentro de entretenimiento.
 - 12 opciones por pregunta.
 - UUID y posiciones únicos.
+- Textos de opción únicos dentro de cada tarjeta.
 - Respuestas completas.
+- Ausencia de respuestas basadas en años exactos.
+- Máximo del 17 % de preguntas de siglo o década por categoría.
 - Mezcla de `true` y `false` en tarjetas binarias.
 - Rangos del 1 al 12 en tarjetas de orden.
 - Color hexadecimal en tarjetas de color.

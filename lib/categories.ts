@@ -33,4 +33,12 @@ export const DEFAULT_CATEGORIES: Category[] = [
     icon: "★",
     position: 4,
   },
+  {
+    id: "55555555-5555-4555-8555-555555555555",
+    slug: "ciencia",
+    name: "Ciencia",
+    color: "#a78bfa",
+    icon: "✦",
+    position: 5,
+  },
 ];

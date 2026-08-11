@@ -6,18 +6,19 @@ El proyecto es autónomo: las preguntas viajan dentro de la aplicación y la par
 
 ## Incluido
 
-- Interfaz original de concurso televisivo adaptable a distintos formatos landscape.
+- Interfaz original de concurso televisivo adaptable a móviles, tabletas, ordenadores y distintos formatos landscape.
+- Solicitud de pantalla completa desde los controles y manifiesto instalable en modo fullscreen.
 - Selección animada del primer asiento.
-- Cuatro categorías y segundo giro opcional de categoría.
+- Cinco categorías y segundo giro opcional de categoría.
 - Rueda de pregunta con 12 opciones.
 - Seis tipos de pregunta: sí/no, número, orden, siglo/década, color y respuesta libre.
 - Puntuación total y puntuación provisional de ronda.
 - Pase temporal, plantarse, fallo y eliminación de ronda.
 - Recuperación de la última partida mediante `localStorage`.
 - Puntuación objetivo configurable antes de jugar.
-- 400 preguntas iniciales: 100 por categoría y 4.800 opciones.
+- 550 preguntas: 100 de geografía, historia, deportes y ciencia; 150 de entretenimiento, incluidas 50 de música. En total hay 6.600 opciones.
 - Selección aleatoria sin repetir los identificadores ya utilizados.
-- 16 pruebas automatizadas del motor, persistencia y API.
+- 23 pruebas automatizadas del motor, persistencia, API, contenido y comportamiento responsive.
 
 ## Estructura importante
 
@@ -26,7 +27,7 @@ app/                         Aplicación Next.js y rutas internas de API
 components/game-app.tsx      Interfaz y flujo completo
 lib/game/                    Máquina de estados y persistencia
 lib/question-repository.ts   Selección aleatoria desde el banco incluido
-data/questions.json          Banco completo de 400 preguntas
+data/questions.json          Banco completo de 550 preguntas
 scripts/content/             Fuentes editoriales que generan el banco
 tests/                       Pruebas automatizadas
 docs/                        Reglas y guías del proyecto

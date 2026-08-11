@@ -34,6 +34,7 @@ Abre la dirección publicada y verifica:
 2. Es posible configurar entre 2 y 4 asientos.
 3. La ruleta carga una pregunta con 12 tapones.
 4. Al cerrar y volver a abrir la página aparece la opción de recuperar la partida.
+5. Al iniciar o continuar una partida, el navegador ofrece pantalla completa cuando la plataforma lo permite; el botón `⛶` permite solicitarla de nuevo.
 
 La recuperación debe comprobarse con el mismo navegador y dispositivo, fuera del modo privado.
 

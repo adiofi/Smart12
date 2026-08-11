@@ -128,6 +128,7 @@ export function orderCards({ category, family, title, items, count, prompt, sort
 function makeQuestion({ category, family, variant, title, type, difficulty, options }) {
   return {
     id: stableUuid(`smart12:${category}:${family}:${variant}`),
+    family,
     title,
     type,
     category_slug: category,

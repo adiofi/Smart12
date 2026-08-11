@@ -31,6 +31,36 @@ const TYPE_LABELS: Record<QuestionType, string> = {
   free_text: "Respuesta libre",
 };
 
+type LockableScreenOrientation = ScreenOrientation & {
+  lock?: (orientation: "landscape") => Promise<void>;
+  unlock?: () => void;
+};
+
+async function enterImmersiveMode() {
+  try {
+    if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+      await document.documentElement.requestFullscreen({ navigationUI: "hide" });
+    }
+  } catch {
+    // Algunos navegadores solo permiten el modo instalado; el diseño sigue siendo funcional.
+  }
+
+  try {
+    await (window.screen.orientation as LockableScreenOrientation).lock?.("landscape");
+  } catch {
+    // El bloqueo de orientación no está disponible en todos los navegadores móviles.
+  }
+}
+
+async function exitImmersiveMode() {
+  try {
+    (window.screen.orientation as LockableScreenOrientation).unlock?.();
+    if (document.fullscreenElement) await document.exitFullscreen();
+  } catch {
+    // Salir del modo inmersivo es una mejora progresiva.
+  }
+}
+
 function formatSavedDate(value: string): string {
   try {
     return new Intl.DateTimeFormat("es", {
@@ -49,6 +79,7 @@ export function GameApp() {
   const [savedGame, setSavedGame] = useState<GameState | null>(null);
   const [game, setGame] = useState<GameState | null>(null);
   const [categories, setCategories] = useState<Category[]>(DEFAULT_CATEGORIES);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const gameRef = useRef<GameState | null>(null);
 
   useEffect(() => {
@@ -60,6 +91,13 @@ export function GameApp() {
       })
       .catch(() => undefined);
     return () => window.clearTimeout(hydrationTask);
+  }, []);
+
+  useEffect(() => {
+    const syncFullscreenState = () => setIsFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange", syncFullscreenState);
+    syncFullscreenState();
+    return () => document.removeEventListener("fullscreenchange", syncFullscreenState);
   }, []);
 
   useEffect(() => {
@@ -89,6 +127,7 @@ export function GameApp() {
   }, []);
 
   const startNewGame = (names: string[], targetScore: number) => {
+    void enterImmersiveMode();
     const nextGame = createGame(names, targetScore);
     setGame(nextGame);
     setScreen("game");
@@ -116,6 +155,7 @@ export function GameApp() {
           onNew={requestNewGame}
           onContinue={() => {
             if (!savedGame) return;
+            void enterImmersiveMode();
             setGame(savedGame);
             setScreen("game");
           }}
@@ -130,6 +170,11 @@ export function GameApp() {
           categories={categories}
           dispatch={dispatch}
           onExit={exitToHome}
+          isFullscreen={isFullscreen}
+          onToggleFullscreen={() => {
+            if (document.fullscreenElement) void exitImmersiveMode();
+            else void enterImmersiveMode();
+          }}
           onNewGame={() => {
             setGame(null);
             setScreen("setup");
@@ -286,12 +331,16 @@ function GameScreen({
   categories,
   dispatch,
   onExit,
+  isFullscreen,
+  onToggleFullscreen,
   onNewGame,
 }: {
   game: GameState;
   categories: Category[];
   dispatch: (action: GameAction) => void;
   onExit: () => void;
+  isFullscreen: boolean;
+  onToggleFullscreen: () => void;
   onNewGame: () => void;
 }) {
   const [questionError, setQuestionError] = useState<string | null>(null);
@@ -329,6 +378,14 @@ function GameScreen({
         <div className="round-chip"><span>RONDA</span><strong>{String(game.roundNumber).padStart(2, "0")}</strong></div>
         <div className="game-mini-brand">SMART <strong>12</strong></div>
         <div className="target-chip">META <strong>{game.targetScore}</strong></div>
+        <button
+          className="icon-button quiet fullscreen-button"
+          onClick={onToggleFullscreen}
+          aria-label={isFullscreen ? "Salir de pantalla completa" : "Entrar en pantalla completa"}
+          title={isFullscreen ? "Salir de pantalla completa" : "Pantalla completa"}
+        >
+          {isFullscreen ? "⊡" : "⛶"}
+        </button>
         <button className="icon-button quiet" onClick={() => window.location.reload()} aria-label="Recargar">↻</button>
       </header>
 
@@ -587,17 +644,19 @@ function QuestionBoard({
         disabled={game.pendingRevealPosition !== null || selectedPosition !== null}
         onReveal={setSelectedPosition}
       />
-      <div className="turn-instruction">
-        Turno de <strong style={{ color: currentPlayer.color.value }}>{currentPlayer.name}</strong>
-        {!currentPlayer.hasAnsweredThisRound && <span> · Debe destapar al menos una opción</span>}
-      </div>
-      <div className="round-controls">
-        <button className="pass-button" disabled={!canStop} onClick={() => dispatch({ type: "PASS" })}>
-          <span>⇥</span> Pasar turno
-        </button>
-        <button className="bank-button" disabled={!canStop} onClick={() => dispatch({ type: "BANK" })}>
-          <span>◆</span> Plantarse y guardar {currentPlayer.roundScore}
-        </button>
+      <div className="question-footer">
+        <div className="turn-instruction">
+          Turno de <strong style={{ color: currentPlayer.color.value }}>{currentPlayer.name}</strong>
+          {!currentPlayer.hasAnsweredThisRound && <span> · Debe destapar al menos una opción</span>}
+        </div>
+        <div className="round-controls">
+          <button className="pass-button" disabled={!canStop} onClick={() => dispatch({ type: "PASS" })}>
+            <span>⇥</span> Pasar turno
+          </button>
+          <button className="bank-button" disabled={!canStop} onClick={() => dispatch({ type: "BANK" })}>
+            <span>◆</span> Plantarse y guardar {currentPlayer.roundScore}
+          </button>
+        </div>
       </div>
       {selectedOption && game.pendingRevealPosition === null && (
         <OptionPreviewDialog

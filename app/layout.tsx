@@ -5,6 +5,11 @@ export const metadata: Metadata = {
   title: "Smart 12",
   description: "Concurso de cultura general para 2 a 4 equipos",
   applicationName: "Smart 12",
+  appleWebApp: {
+    capable: true,
+    title: "Smart 12",
+    statusBarStyle: "black-translucent",
+  },
 };
 
 export const viewport: Viewport = {

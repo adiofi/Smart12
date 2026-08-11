@@ -1,4 +1,4 @@
-import { answer, century, displayYear, mappedCards, orderCards, rows } from "./builders.mjs";
+import { answer, century, mappedCards, orderCards, rows } from "./builders.mjs";
 
 const events = rows(`
 Fundación tradicional de Roma|-753|Italia|1
@@ -148,13 +148,12 @@ Imperio portugués en Brasil desde 1763|Río de Janeiro
 
 export function buildHistoryQuestions() {
   return [
-    ...mappedCards({ category: "historia", family: "fechas", title: "¿En qué año ocurrió cada acontecimiento?", type: "number", items: events, count: 18, prompt: (item) => item.event, response: (item) => answer(item.year, displayYear(item.year)), difficulty: (variant) => variant % 3 === 0 ? 3 : 2 }),
-    ...mappedCards({ category: "historia", family: "siglos", title: "¿En qué siglo ocurrió cada acontecimiento?", type: "period", items: events, count: 18, prompt: (item) => item.event, response: (item) => answer(century(item.year)) }),
+    ...mappedCards({ category: "historia", family: "siglos", title: "¿En qué siglo ocurrió cada acontecimiento?", type: "period", items: events, count: 16, prompt: (item) => item.event, response: (item) => answer(century(item.year)) }),
     ...mappedCards({ category: "historia", family: "antes-1800", title: "¿Ocurrió este acontecimiento antes del año 1800?", type: "boolean", items: events, count: 12, prompt: (item) => item.event, response: (item) => answer(item.year < 1800, item.year < 1800 ? "Sí" : "No"), balanceBy: (item) => item.year < 1800 }),
-    ...orderCards({ category: "historia", family: "cronologia", title: "Ordena estos acontecimientos del más antiguo (1) al más reciente (12).", items: events, count: 12, prompt: (item) => item.event, sortValue: (item) => item.year }),
-    ...mappedCards({ category: "historia", family: "lugares", title: "¿Con qué país o región se asocia principalmente cada acontecimiento?", type: "free_text", items: events, count: 14, prompt: (item) => item.event, response: (item) => answer(item.place) }),
-    ...mappedCards({ category: "historia", family: "europa", title: "¿Tuvo lugar principalmente en Europa este acontecimiento?", type: "boolean", items: events, count: 10, prompt: (item) => item.event, response: (item) => answer(item.europe, item.europe ? "Sí" : "No"), balanceBy: (item) => item.europe }),
-    ...mappedCards({ category: "historia", family: "personajes", title: "¿Qué figura histórica se asocia con cada descripción?", type: "free_text", items: people, count: 8, prompt: (item) => item.prompt, response: (item) => answer(item.person), difficulty: 2 }),
-    ...mappedCards({ category: "historia", family: "capitales-historicas", title: "¿Cuál fue la capital o principal sede de este Estado histórico?", type: "free_text", items: capitals, count: 8, prompt: (item) => item.civilization, response: (item) => answer(item.capital), difficulty: 3 }),
+    ...orderCards({ category: "historia", family: "cronologia", title: "Ordena estos acontecimientos del más antiguo (1) al más reciente (12).", items: events, count: 14, prompt: (item) => item.event, sortValue: (item) => item.year }),
+    ...mappedCards({ category: "historia", family: "lugares", title: "¿Con qué país o región se asocia principalmente cada acontecimiento?", type: "free_text", items: events, count: 18, prompt: (item) => item.event, response: (item) => answer(item.place) }),
+    ...mappedCards({ category: "historia", family: "europa", title: "¿Tuvo lugar principalmente en Europa este acontecimiento?", type: "boolean", items: events, count: 12, prompt: (item) => item.event, response: (item) => answer(item.europe, item.europe ? "Sí" : "No"), balanceBy: (item) => item.europe }),
+    ...mappedCards({ category: "historia", family: "personajes", title: "¿Qué figura histórica se asocia con cada descripción?", type: "free_text", items: people, count: 14, prompt: (item) => item.prompt, response: (item) => answer(item.person), difficulty: 2 }),
+    ...mappedCards({ category: "historia", family: "capitales-historicas", title: "¿Cuál fue la capital o principal sede de este Estado histórico?", type: "free_text", items: capitals, count: 14, prompt: (item) => item.civilization, response: (item) => answer(item.capital), difficulty: 3 }),
   ];
 }
